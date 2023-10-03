@@ -12,3 +12,30 @@ tipo_triangulo(X,Y,Z,T):- triangulo(X,Y,Z), T = "escaleno", !.
 divFromTo([H|T], I , F, T, L):- I<F, I1 is I+1, divFromTo(T,I1,F,T,L).
 divFromTo([H|T], I , F, T, [H|L]):- I>=F, I<T, ! , I1 is I+1, divFromTo(T,I1,F,T,L).
 divFromTo(_,_,_,_,[]).
+
+%Otro caso con puntos 
+
+conectada(a, b).
+conectada(a, c).
+conectada(b, d).
+conectada(c, e).
+conectada(d, f).
+conectada(e, f).
+conectada(e, b).
+conectada(f, g).
+conectada(g, a).
+
+% Predicado para encontrar una ruta desde Origen hasta Destino
+encontrar_ruta(Origen, Destino, Camino) :-
+    encontrar_ruta_aux(Origen, Destino, [Origen], Camino),
+    write('Ruta encontrada: '), write(Camino), nl.
+
+% Caso base: llegamos al destino
+encontrar_ruta_aux(Destino, Destino, Camino, Camino).
+
+% Caso recursivo: encontramos una conexión intermedia y continuamos la búsqueda.
+encontrar_ruta_aux(Origen, Destino, Camino, CaminoFinal) :-
+    conectada(Origen, Intermedia),
+    \+ member(Intermedia, Camino),  % Evita ciclos.
+    append(Camino, [Intermedia], CaminoExtendido), % Añade la conexión intermedia al camino.
+    encontrar_ruta_aux(Intermedia, Destino, CaminoExtendido , CaminoFinal), !. % Usamos corte porque solo queremos la primera solucion.

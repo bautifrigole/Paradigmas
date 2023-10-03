@@ -7,7 +7,7 @@ es_padre(leiaOrgana, kyloRen).
 es_padre(hanSolo, kyloRen).
 
 % Padres adoptivos
-es_padre(owenLars, lukeSkywalker).
+es_padre(owenLars, lueSkywalker).
 es_padre(beruLars, lukeSkywalker).
 es_padre(bailOrgana, leiaOrgana).
 es_padre(brehaOrgana, leiaOrgana).
@@ -37,3 +37,23 @@ es_descendiente(X,Y):- es_padre(Y,X).
 es_descendiente(X,Y):- es_padre_adoptivo(Y, X).
 es_descendiente(X,Y):- es_padre(Y,Z), es_descendiente(X,Z).
 es_descendiente(X,Y):- es_padre_adoptivo(Y,Z), es_descendiente(X,Z).
+
+antepasados(Persona,[]).
+
+antepasados(Persona,Antepasados):-
+    es_padre(Antepasado, Persona), 
+    antepasados(Antepasado, Antepasados2),
+    append(Antepasados2, [Antepasado], Antepasados).
+    
+
+% Predicado para encontrar el primer número par en una lista.
+encontrar_primer_par([X|_], X) :-
+    X mod 2 =:= 0,  % Verifica si X es par.
+    !.  % Corte aquí, detiene la búsqueda después de encontrar el primer número par.
+
+% Caso recursivo: cuando el primer elemento no es par, continúa buscando en el resto de la lista.
+encontrar_primer_par([_|Resto], PrimerPar) :-
+    encontrar_primer_par(Resto, PrimerPar).
+
+% Caso base: si la lista está vacía, no se puede encontrar ningún número par.
+encontrar_primer_par([], no_par).
