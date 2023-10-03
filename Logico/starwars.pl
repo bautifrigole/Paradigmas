@@ -38,13 +38,22 @@ es_descendiente(X,Y):- es_padre_adoptivo(Y, X).
 es_descendiente(X,Y):- es_padre(Y,Z), es_descendiente(X,Z).
 es_descendiente(X,Y):- es_padre_adoptivo(Y,Z), es_descendiente(X,Z).
 
-antepasados(Persona,[]).
+% Predicado para encontrar todos los antepasados de una persona en una lista plana.
+todos_antepasados(Persona, Antepasados) :-
+    findall(Antepasado, antepasados_aux(Persona, Antepasado), Antepasados).
 
-antepasados(Persona,Antepasados):-
-    es_padre(Antepasado, Persona), 
-    antepasados(Antepasado, Antepasados2),
-    append(Antepasados2, [Antepasado], Antepasados).
-    
+% Caso base: una persona no tiene antepasados.
+antepasados_aux(Persona, Persona) :- \+ es_padre(_, Persona).
+
+% Caso recursivo: encuentra los antepasados de una persona.
+antepasados_aux(Persona, Antepasado) :-
+    es_padre(Padre, Persona),
+    antepasados_aux(Padre, Antepasado).
+
+
+
+
+
 
 % Predicado para encontrar el primer número par en una lista.
 encontrar_primer_par([X|_], X) :-

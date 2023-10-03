@@ -27,8 +27,7 @@ conectada(g, a).
 
 % Predicado para encontrar una ruta desde Origen hasta Destino
 encontrar_ruta(Origen, Destino, Camino) :-
-    encontrar_ruta_aux(Origen, Destino, [Origen], Camino),
-    write('Ruta encontrada: '), write(Camino), nl.
+    encontrar_ruta_aux(Origen, Destino, [Origen], Camino).
 
 % Caso base: llegamos al destino
 encontrar_ruta_aux(Destino, Destino, Camino, Camino).
