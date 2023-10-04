@@ -1,7 +1,3 @@
-divFromTo([H|T], I , F, T, L):- I<F, I1 is I+1, divFromTo(T,I1,F,T,L).
-divFromTo([H|T], I , F, T, [H|L]):- I>=F, I<T, ! , I1 is I+1, divFromTo(T,I1,F,T,L).
-divFromTo(_,_,_,_,[]).
-
 %Otro caso con puntos 
 
 conectada(a, b).
