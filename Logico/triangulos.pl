@@ -1,3 +1,5 @@
+% Problema: Dado tres números enteros positivos, determinar si forman un triángulo y en caso de ser así, determinar el tipo de triángulo que es.
+
 % Solución 1
 mayor_cero(X,Y,Z):- X>0, Y>0, Z>0.
 suma_dos_lados(X,Y,Z):- X+Y >= Z, X+Z >= Y, Y+Z >= X.

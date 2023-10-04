@@ -66,3 +66,9 @@ encontrar_primer_par([_|Resto], PrimerPar) :-
 
 % Caso base: si la lista está vacía, no se puede encontrar ningún número par.
 encontrar_primer_par([], no_par).
+
+
+hijos(X,L):- hijosR(X,[],L).
+
+hijosR(X,L1,L2):- es_padre(X,Y), not(member(Y,L1)),append([Y],L1,L3),hijosR(X,L3,L2),!.
+hijosR(_,L,L).
