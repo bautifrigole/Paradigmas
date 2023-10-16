@@ -111,14 +111,29 @@ comer' Palta persona = persona {
 almuerzo' :: [Comida']
 almuerzo' = [Ensalada 1, Hamburguesa ["cheddar", "bacon"], Palta, Ensalada 3]
 
+--Version normal
 almorzar' :: Persona -> Persona
 almorzar' persona = foldr comer' persona almuerzo'
+
+--vesion recursiva
+almorzarRecur' :: Persona -> Persona
+almorzarRecur' persona = comerAlmuerzo persona almuerzo'
+  where
+    comerAlmuerzo :: Persona -> [Comida'] -> Persona
+    comerAlmuerzo persona [] = persona
+    comerAlmuerzo persona (x:xs) = comerAlmuerzo (comer' x persona) xs
 
 -- 2) Queremos que todas las comidas se puedan comer dos veces seguidas
 repetir' :: Comida' -> Persona -> Persona
 repetir' comida persona = (comer' comida . comer' comida) persona
 
 -- 3) Queremos ver si un almuerzo contiene una comida dada
+--version recursiva
+contieneComidaRec :: Comida' -> [Comida'] -> Bool
+contieneComidaRec _ [] = False
+contieneComidaRec comida (x:xs) = comida == x || contieneComidaRec comida xs
+
+--version no recursiva
 contieneComida' :: Comida' -> [Comida'] -> Bool
 contieneComida' comida comidas = elem comida comidas
 
@@ -129,7 +144,11 @@ sabrosa' :: Comida' -> Bool
 sabrosa' (Ensalada kilos) = kilos > 1
 
 -- las hamburguesas son sabrosas cuando tienen cheddar
-sabrosa' (Hamburguesa ingredientes) = "cheddar" `elem` ingredientes
+--sabrosa' (Hamburguesa ingredientes) = "cheddar" `elem` ingredientes
+
+--version recursiva
+sabrosa' (Hamburguesa []) = False
+sabrosa' (Hamburguesa (ingrediente:ingredientes)) = ingrediente == "cheddar" || sabrosa' (Hamburguesa ingredientes)
 
 -- las paltas son sabrosas
 sabrosa' Palta = True
