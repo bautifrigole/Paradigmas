@@ -38,6 +38,13 @@ palta persona = persona {
   peso = peso persona + 2
 }
 
+enForma :: Persona -> Bool
+enForma persona = colesterol persona < 100 && peso persona < 80
+
+personaFilter :: [Persona] -> [Persona]
+personaFilter personas = filter enForma personas
+
+
 almuerzo :: [Comida]
 almuerzo = [ensalada 1, hamburguesa ["cheddar", "bacon"], palta, ensalada 3]
 
