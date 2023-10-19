@@ -1,10 +1,4 @@
-type Kilos = Int
-type Ingrediente = String
 
-data Persona = Persona {
-  colesterol :: Float,
-  peso :: Kilos
-} deriving (Show, Eq)
 
 pesoPar :: Persona -> Bool
 pesoPar = even . peso
@@ -38,19 +32,18 @@ palta persona = persona {
   peso = peso persona + 2
 }
 
-enForma :: Persona -> Bool
-enForma persona = colesterol persona < 100 && peso persona < 80
-
-personaFilter :: [Persona] -> [Persona]
-personaFilter personas = filter enForma personas
-
-
 almuerzo :: [Comida]
 almuerzo = [ensalada 1, hamburguesa ["cheddar", "bacon"], palta, ensalada 3]
 
 almorzar :: Persona -> Persona
 almorzar persona = foldr ($) persona almuerzo
 
+almorzarRec :: Persona -> Persona
+almorzarRec persona = comerAlmuerzo almuerzo persona
+  where
+    comerAlmuerzo :: [Comida] -> Persona -> Persona
+    comerAlmuerzo [] persona = persona
+    comerAlmuerzo (comida:comidas) persona = comerAlmuerzo comidas (comida persona)
 -- para mayor expresividad
 -- almorzar persona = foldr comer persona almuerzo
 -- comer persona comida = comida persona
@@ -92,6 +85,14 @@ disfrutarPalta _ = True
 -- quiero comer las distintas cosas y cada cosa aporta distinto 
 -- al comerla
 
+type Kilos = Int
+type Ingrediente = String
+
+data Persona = Persona {
+  colesterol :: Float,
+  peso :: Kilos
+} deriving (Show, Eq)
+
 data Comida' = Ensalada Kilos | Hamburguesa [Ingrediente] | Palta
   deriving (Eq, Ord, Show)
 
@@ -130,9 +131,6 @@ almorzarRecur' persona = comerAlmuerzo persona almuerzo'
     comerAlmuerzo persona [] = persona
     comerAlmuerzo persona (x:xs) = comerAlmuerzo (comer' x persona) xs
 
--- 2) Queremos que todas las comidas se puedan comer dos veces seguidas
-repetir' :: Comida' -> Persona -> Persona
-repetir' comida persona = (comer' comida . comer' comida) persona
 
 -- 3) Queremos ver si un almuerzo contiene una comida dada
 --version recursiva
@@ -161,7 +159,14 @@ sabrosa' (Hamburguesa (ingrediente:ingredientes)) = ingrediente == "cheddar" || 
 sabrosa' Palta = True
 
 -- 5) Queremos averiguar si una comida va a ser disfrutada por alguien.
--- Para quienes pesan una cantidad par, todas las comidas son disfrutadas, 
--- para los demás, solo son disfrutadas las comidas sabrosas
+-- Una comida es disfrutada si su peso es par y es sabrosa
 disfrutar' :: Comida' -> Persona -> Bool
-disfrutar' comida alguien = pesoPar alguien || sabrosa' comida
+disfrutar' comida alguien = pesoPar alguien && sabrosa' comida
+
+
+enForma :: Persona -> Bool
+enForma persona = colesterol persona < 100
+
+-- 6) Queremos saber entre una lista de personas, cuales estan en forma y disfrutan la comida
+filtroPersonas :: [Persona] -> Comida' -> [Persona]
+filtroPersonas personas comida = filter (disfrutar' comida) (filter enForma personas)
